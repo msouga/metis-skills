@@ -1,0 +1,69 @@
+# Plantilla base de Azure DevOps Pipeline para proyectos RSM Peru
+# Ajustar appName, azureSubscription y environment segun el proyecto.
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        version: '8.x'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore packages'
+      inputs:
+        command: 'restore'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run tests'
+      inputs:
+        command: 'test'
+        arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - deployment: DeployToStaging
+    environment: 'staging'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Azure-Connection'
+              appType: 'webApp'
+              appName: 'rsmperu-api'
+              deployToSlotOrASE: true
+              slotName: 'staging'
+              package: '$(Pipeline.Workspace)/drop/*.zip'
