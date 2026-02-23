@@ -12,7 +12,7 @@ GitHub publico: https://github.com/msouga/metis-skills
 
 ## Contenido
 
-8 subdirectorios de skills, cada uno con su `SKILL.md` y opcionalmente un directorio `references/` con material de consulta.
+11 subdirectorios de skills, cada uno con su `SKILL.md` y opcionalmente un directorio `references/` con material de consulta.
 
 ## Skills
 
@@ -27,7 +27,10 @@ Cada skill esta instalado en `~/.claude/skills/<nombre>/SKILL.md`. Solo contiene
 | azure-cloud | Nomenclatura de recursos, Key Vault, Managed Identity, deployment slots, pipeline template | 68 |
 | azure-architecture | Patron de referencia, tiers dev/prod, costos, checklist pre-produccion | 74 |
 | iso27001-security | Controles A.5/A.8, esquema AuditLogs, retencion 7 anos, roles, JWT config | 95 |
-| docx-generation | Documentos Word con pandoc, plantilla RSM, tablas, correos HTML, presentaciones pptx | 91 |
+| docx-generation | Documentos Word con pandoc, plantilla RSM V2, TOC, tablas, correos HTML, pptx | 238 |
+| eraser-diagrams | Diagramas profesionales con MCP Eraser: cloud, secuencia, ERD, flowchart, BPMN | 174 |
+| project-docs | Inicializa estructura estandar de documentacion para proyectos RSM Peru | 129 |
+| spell-check | Revision ortografica y gramatical de documentos MD en espanol con hunspell | 93 |
 
 ## Formato de los skills (reglas oficiales)
 
@@ -71,7 +74,7 @@ Para instalar los skills en una maquina nueva, copiar cada subdirectorio a `~/.c
 
 ```bash
 git clone https://github.com/msouga/metis-skills.git
-cp -R metis-skills/*-*/ ~/.claude/skills/
+for d in metis-skills/*/; do [ -f "$d/SKILL.md" ] && cp -R "$d" ~/.claude/skills/; done
 ```
 
 El skill-creator oficial de Anthropic se instala por separado:
@@ -95,3 +98,5 @@ chmod +x ~/.claude/skills/skill-creator/scripts/*.py
 - Se reescribieron los 8 skills siguiendo las best practices oficiales: frontmatter solo con `name` y `description`, contenido enfocado en convenciones RSM Peru (sin repetir conocimiento que Claude ya tiene), validados con `quick_validate.py`.
 - Se creo el skill `docx-generation` combinando reglas del CLAUDE.md principal y un `documento.md` suelto que existia en `~/.claude/skills/`.
 - Se limpio el CLAUDE.md principal (`/Users/msouga/CLAUDE.md`) moviendo las secciones de documentos y correos al skill.
+- Se agregaron los skills `eraser-diagrams`, `project-docs` y `spell-check` al repositorio.
+- Se sincronizo `docx-generation` con la version instalada (V2, 238 lineas).
