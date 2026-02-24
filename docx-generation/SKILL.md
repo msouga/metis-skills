@@ -171,22 +171,30 @@ Guardar todos los diagramas en `documentacion/diagramas/` y referenciar con ruta
 
 Desde la raiz del proyecto. Siempre incluir `--resource-path` con la carpeta del documento y la de diagramas.
 
-Paso 1: generar el docx con pandoc:
+Paso 1: generar el docx con pandoc (usar plantilla Con_Footer, NO la v2 directamente):
 
 ```bash
 pandoc documentacion/informes/mi-informe.md \
-  --reference-doc="/Users/msouga/Library/Group Containers/UBF8T346G9.Office/User Content.localized/Templates.localized/RSM_Peru_Plantilla_v2.dotx" \
+  --reference-doc="/Users/msouga/Library/Group Containers/UBF8T346G9.Office/User Content.localized/Templates.localized/RSM_Peru_Plantilla_Con_Footer.dotx" \
   --resource-path=documentacion/informes:documentacion/diagramas \
   -o documentacion/informes/mi-informe.docx
 ```
 
-Paso 2: post-procesar listas numeradas (corrige formato a 1. a. i.):
+Paso 2: post-procesar con fix-docx-v2.py (portada RSM + header/footer + propiedades):
+
+```bash
+python3 "$HOME/Trabajo/RSM/RSM Peru/Plantillas y Documentacion/plantillas/fix-docx-v2.py" documentacion/informes/mi-informe.docx
+```
+
+**Importante**: El paso 2 es SIEMPRE necesario. Inyecta la portada corporativa, header con logo, footer con titulo/paginacion, y propiedades del documento. La plantilla v2 (.dotx) NO es compatible con pandoc por el SVG en headers.
+
+Paso 3: post-procesar listas numeradas (corrige formato a 1. a. i.):
 
 ```bash
 python3 "$HOME/Trabajo/RSM/RSM Peru/Plantillas y Documentacion/plantillas/fix-docx.py" documentacion/informes/mi-informe.docx
 ```
 
-**Importante**: El paso 2 es necesario solo si el documento tiene listas numeradas con mas de un nivel. Pandoc genera todos los niveles con numeros decimales; fix-docx.py los corrige a numeros, letras y romanos.
+**Importante**: El paso 3 es necesario solo si el documento tiene listas numeradas con mas de un nivel. Pandoc genera todos los niveles con numeros decimales; fix-docx.py los corrige a numeros, letras y romanos.
 
 ## Footer automatico
 
