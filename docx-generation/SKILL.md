@@ -91,7 +91,7 @@ No incluir `author` en el YAML. fix-docx-v2.py lo completa automaticamente con e
 
 ## Tabla de Contenido (TOC)
 
-Si el documento necesita TOC, insertar despues del frontmatter. Poner salto de pagina ANTES (para separar de la caratula) pero NO despues (el primer `#` ya genera nueva pagina).
+Siempre incluir TOC despues del frontmatter (salvo documentos de una sola pagina). Poner salto de pagina ANTES (para separar de la caratula) pero NO despues (el primer `#` ya genera nueva pagina).
 
 ````markdown
 ```{=openxml}
@@ -117,8 +117,23 @@ Al abrir en Word: clic derecho en la TOC > "Actualizar campo" > "Actualizar toda
 
 ## Estructura del contenido
 
-- No usar `#` para el titulo (ya sale del frontmatter YAML). Capitulos empiezan en `#`.
-- Numerar encabezados: `# 1. Capitulo`, `## 1.1. Subcapitulo`, `### 1.1.1. Sub-sub`.
+### Reglas obligatorias de encabezados
+
+1. **No usar `#` para el titulo** del documento. El titulo sale del frontmatter YAML. Los capitulos del contenido empiezan en `#`.
+2. **Siempre numerar los encabezados** con el formato `n.`, `n.n.`, `n.n.n.`:
+   - `# 1. Capitulo` (Heading 1)
+   - `## 1.1. Subcapitulo` (Heading 2)
+   - `### 1.1.1. Sub-subcapitulo` (Heading 3)
+   - La numeracion es manual (pandoc no la genera automaticamente).
+3. **Nunca saltar niveles de encabezado**. La jerarquia debe ser estricta:
+   - Correcto: `#` -> `##` -> `###`
+   - Incorrecto: `#` -> `###` (salta `##`)
+   - Incorrecto: `##` sin un `#` padre antes
+   - Cada `##` debe estar dentro de un `#`, cada `###` dentro de un `##`.
+4. **Siempre incluir Tabla de Contenido (TOC)** despues del frontmatter. Todos los documentos RSM profesionales llevan TOC. Solo omitir si el documento tiene una sola pagina de contenido.
+
+### Reglas de formato
+
 - Linea en blanco obligatoria antes de listas (`-`) y entre parrafos. Sin ella, pandoc NO renderiza la lista y la colapsa en el parrafo anterior. Especialmente critico despues de un parrafo que termina en `:` seguido de items con `-`.
 - No mezclar `*` literal dentro de `**` negrita (pandoc confunde asteriscos). Usar "wildcard" en vez de `*`.
 - No usar emojis, en-dash, em-dash ni lineas horizontales (`---`).
