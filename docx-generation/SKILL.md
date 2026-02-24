@@ -265,7 +265,7 @@ Reglas:
 
 ## Revision ortografica
 
-Antes de generar el .docx, ejecutar revision ortografica sobre el .md fuente.
+La revision ortografica es parte del proceso de generacion. Se ejecuta automaticamente sin detener el flujo ni pedir confirmacion. Corregir los errores encontrados directamente en el .md y continuar con la generacion del .docx.
 
 ### Paso 1: hunspell (deteccion rapida)
 
@@ -288,27 +288,19 @@ Leer el .md completo y revisar:
 - **Ene**: uso correcto de n
 - **Puntuacion**: signos de apertura (!, ?), comas, puntos
 - **Gramatica**: concordancia genero/numero, preposiciones, conjugaciones
-- **Estilo** (solo reportar): oraciones largas, repeticiones, gerundios mal usados
 
-### Paso 3: correccion
+### Paso 3: corregir y continuar
 
-Presentar resultados en tabla:
+Aplicar todas las correcciones directamente en el .md (no preguntar). Luego continuar con la generacion del .docx. Reportar al final un resumen breve de las correcciones aplicadas (si las hubo).
 
-```
-| Linea | Error | Correccion | Tipo |
-|-------|-------|------------|------|
-| 11    | certificacion | certificacion | Tilde |
-```
+## Flujo completo de generacion
 
-Preguntar a Mau: (1) aplicar todas, (2) revisar una por una, o (3) solo el reporte.
+Ejecutar todo sin detenerse ni pedir confirmacion. El flujo es continuo:
 
-## Checklist antes de entregar
-
-1. Ejecutar revision ortografica (hunspell + revision inteligente) sobre el .md
-2. Verificar que todas las tablas con columnas numericas tienen `---:` en el separador
-3. Verificar linea en blanco antes de cada lista con `-`
-4. Verificar que las imagenes tienen alt text vacio `![]()` si usan caption raw openxml
-5. Verificar que el frontmatter tiene al menos: title, subtitle, date
-6. Ejecutar fix-docx-v2.py (portada + header/footer + propiedades)
-7. Ejecutar fix-docx.py si hay listas numeradas con subniveles
-8. Abrir el .docx en Word y actualizar campos: Ctrl+A, F9
+1. Escribir el .md con frontmatter, TOC y contenido
+2. Revision ortografica automatica (hunspell + revision inteligente) -> corregir directamente
+3. Verificar: tablas con `---:`, linea en blanco antes de listas, alt text vacio en imagenes con caption, frontmatter con title/subtitle/date
+4. Generar .docx con pandoc (plantilla Con_Footer)
+5. Ejecutar fix-docx-v2.py (portada + header/footer + propiedades)
+6. Ejecutar fix-docx.py si hay listas numeradas con subniveles
+7. Reportar al usuario: documento generado, correcciones ortograficas aplicadas (si hubo), recordatorio de Ctrl+A F9 en Word
