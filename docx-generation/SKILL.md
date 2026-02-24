@@ -25,19 +25,21 @@ Plantilla V2 basada en la plantilla oficial RSM 2024:
 
 Repositorio de plantillas: `~/Trabajo/RSM/RSM Peru/Plantillas y Documentacion/`
 
-Caracteristicas de la plantilla V2:
+Caracteristicas de la plantilla V2 (aplicadas por fix-docx-v2.py):
 
 - **Tema**: RSM 2024 con colores corporativos (42+ tonalidades)
 - **Fuentes**: Arial (tema major y minor)
 - **Pagina**: A4 con margenes oficiales RSM
-- **Header**: Logo RSM en esquina superior derecha (no aparece en primera pagina)
-- **Footer**: Titulo del documento | RSM Peru S.A.C. | Pagina N / Total (no aparece en primera pagina)
+- **Portada**: Fondo azul oscuro (#00153D), onda PoP, logo RSM grande, campos DRAFT + endorsement + titulo + subtitulo + fecha
+- **Header**: Logo RSM en esquina superior derecha (paginas de contenido)
+- **Footer**: Titulo del documento | RSM Peru S.A.C. | Pagina N / Total (paginas de contenido)
 - **Heading 1**: Arial 26pt, azul RSM (#009CDE), salto de pagina antes
 - **Heading 2**: Arial Bold, azul RSM
 - **Body Text**: Arial 9pt, gris (#63666A)
 - **Tablas**: Bordes azules superior/inferior, fila header azul con texto blanco
-- **Listas numeradas**: Nivel 1 = numeros, nivel 2 = letras, nivel 3 = romanos (requiere post-procesamiento)
+- **Listas numeradas**: Nivel 1 = numeros, nivel 2 = letras, nivel 3 = romanos (requiere fix-docx.py)
 - **Source Code**: Consolas 8pt, fondo gris claro
+- **Propiedades**: Autor del sistema, compania RSM Peru, categoria inferida, keywords auto-generadas
 
 ## Ubicacion de archivos
 
@@ -56,25 +58,31 @@ Ejemplo: `documentacion/informes/ejecucion-noche1.md` genera `documentacion/info
 
 Los diagramas van en `documentacion/diagramas/` y se referencian con ruta relativa `../diagramas/` desde cualquier subcarpeta de `documentacion/`.
 
-## Frontmatter YAML (obligatorio)
+## Frontmatter YAML
 
 ```yaml
 ---
 title: "Titulo del Documento"
 subtitle: "Descripcion o subtitulo - Cliente Y"
-author: "RSM Peru S.A.C."
 date: "Mes Ano"
+status: "DRAFT"
+endorsement: "INTERNAL USE ONLY"
+category: "Propuesta"
+keywords: "palabra1; palabra2; palabra3"
 ---
 ```
 
-| Campo | Donde aparece |
-|-------|---------------|
-| `title` | Estilo Titulo en la caratula + campo TITLE en el footer |
-| `subtitle` | Estilo Subtitulo en la caratula |
-| `author` | Estilo Author en la caratula + propiedad Autor del documento |
-| `date` | Estilo Date en la caratula + propiedad Fecha |
+| Campo | Requerido | Donde aparece |
+|-------|-----------|---------------|
+| `title` | Si | Portada (blanco 32pt) + campo TITLE en footer |
+| `subtitle` | Si | Portada (blanco 18pt) + propiedad Asunto |
+| `date` | Si | Portada (blanco 12pt) |
+| `status` | No | Portada (blanco 24pt, default: "DRAFT"). Campo DOCPROPERTY editable en Word |
+| `endorsement` | No | Portada (azul RSM 18pt, default: "INTERNAL USE ONLY"). Campo DOCPROPERTY editable |
+| `category` | No | Propiedad Categoria. Si no se especifica, se infiere del titulo |
+| `keywords` | No | Propiedad Palabras clave. Si no se especifica, se auto-generan (separadas por `;`) |
 
-Campos opcionales adicionales se guardan como custom properties del documento.
+No incluir `author` en el YAML. fix-docx-v2.py lo completa automaticamente con el nombre del usuario del sistema operativo.
 
 ## Tabla de Contenido (TOC)
 
@@ -233,6 +241,7 @@ Reglas:
 2. Verificar que todas las tablas con columnas numericas tienen `---:` en el separador
 3. Verificar linea en blanco antes de cada lista con `-`
 4. Verificar que las imagenes tienen alt text vacio `![]()` si usan caption raw openxml
-5. Verificar que el frontmatter tiene los 4 campos: title, subtitle, author, date
-6. Ejecutar fix-docx.py si hay listas numeradas con subniveles
-7. Abrir el .docx en Word y actualizar campos (TOC, titulo en footer)
+5. Verificar que el frontmatter tiene al menos: title, subtitle, date
+6. Ejecutar fix-docx-v2.py (portada + header/footer + propiedades)
+7. Ejecutar fix-docx.py si hay listas numeradas con subniveles
+8. Abrir el .docx en Word y actualizar campos: Ctrl+A, F9
