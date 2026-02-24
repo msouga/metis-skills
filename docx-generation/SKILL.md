@@ -206,7 +206,7 @@ Paso 2: post-procesar con fix-docx-v2.py (portada RSM + header/footer + propieda
 python3 "$HOME/Trabajo/RSM/RSM Peru/Plantillas y Documentacion/plantillas/fix-docx-v2.py" documentacion/informes/mi-informe.docx
 ```
 
-**Importante**: El paso 2 es SIEMPRE necesario. Inyecta la portada corporativa, header con logo, footer con titulo/paginacion, y propiedades del documento. La plantilla v2 (.dotx) NO es compatible con pandoc por el SVG en headers.
+**Importante**: El paso 2 es SIEMPRE necesario. Inyecta la portada corporativa, header con logo, footer con titulo/paginacion, y propiedades del documento. La plantilla v2 (.dotx) NO es compatible con pandoc por el SVG en headers. Tambien elimina automaticamente el page break duplicado entre portada y TOC (evita pagina en blanco).
 
 Paso 3: post-procesar listas numeradas (corrige formato a 1. a. i.):
 
@@ -214,7 +214,7 @@ Paso 3: post-procesar listas numeradas (corrige formato a 1. a. i.):
 python3 "$HOME/Trabajo/RSM/RSM Peru/Plantillas y Documentacion/plantillas/fix-docx.py" documentacion/informes/mi-informe.docx
 ```
 
-**Importante**: El paso 3 es necesario solo si el documento tiene listas numeradas con mas de un nivel. Pandoc genera todos los niveles con numeros decimales; fix-docx.py los corrige a numeros, letras y romanos.
+**Importante**: El paso 3 es necesario solo si el documento tiene listas numeradas con mas de un nivel. Pandoc genera todos los niveles con numeros decimales; fix-docx.py los corrige a numeros, letras y romanos. fix-docx.py trabaja in-memory (zip-to-zip con regex) y es compatible con fix-docx-v2.py. El orden es importante: siempre ejecutar fix-docx-v2.py ANTES de fix-docx.py.
 
 ## Footer automatico
 
