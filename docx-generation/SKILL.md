@@ -235,9 +235,48 @@ Reglas:
 - Texto en espanol con tildes correctas.
 - Abrir en navegador para copiar (Cmd+A, Cmd+C) y pegar en Outlook (Cmd+V). Esto preserva negritas, listas y formato uniforme.
 
+## Revision ortografica
+
+Antes de generar el .docx, ejecutar revision ortografica sobre el .md fuente.
+
+### Paso 1: hunspell (deteccion rapida)
+
+```bash
+sed '1{/^---$/,/^---$/d}' ARCHIVO.md | \
+  sed 's|https\?://[^ ]*||g' | \
+  sed 's|`[^`]*`||g' | \
+  sed '/^```/,/^```/d' | \
+  hunspell -d es_ES -l | \
+  sort -u
+```
+
+Ignorar falsos positivos: nombres de productos (Azure, Microsoft, Entra, etc.), acronimos (WAF, MFA, DLP, etc.), terminos tecnicos en ingles de uso comun en IT, codigos de examen, URLs y rutas.
+
+### Paso 2: revision inteligente
+
+Leer el .md completo y revisar:
+
+- **Tildes**: faltantes o incorrectas (a, e, i, o, u)
+- **Ene**: uso correcto de n
+- **Puntuacion**: signos de apertura (!, ?), comas, puntos
+- **Gramatica**: concordancia genero/numero, preposiciones, conjugaciones
+- **Estilo** (solo reportar): oraciones largas, repeticiones, gerundios mal usados
+
+### Paso 3: correccion
+
+Presentar resultados en tabla:
+
+```
+| Linea | Error | Correccion | Tipo |
+|-------|-------|------------|------|
+| 11    | certificacion | certificacion | Tilde |
+```
+
+Preguntar a Mau: (1) aplicar todas, (2) revisar una por una, o (3) solo el reporte.
+
 ## Checklist antes de entregar
 
-1. Verificar tildes en todo el texto espanol (a, e, i, o, u, n, !, ?)
+1. Ejecutar revision ortografica (hunspell + revision inteligente) sobre el .md
 2. Verificar que todas las tablas con columnas numericas tienen `---:` en el separador
 3. Verificar linea en blanco antes de cada lista con `-`
 4. Verificar que las imagenes tienen alt text vacio `![]()` si usan caption raw openxml
