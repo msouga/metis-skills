@@ -30,9 +30,14 @@ Caracteristicas de la plantilla V2 (aplicadas por fix-docx-v2.py):
 - **Tema**: RSM 2024 con colores corporativos (42+ tonalidades)
 - **Fuentes**: Arial (tema major y minor)
 - **Pagina**: A4 con margenes oficiales RSM
-- **Portada**: Fondo azul oscuro (#00153D), onda PoP, logo RSM grande, campos DRAFT + endorsement + titulo + subtitulo + fecha
-- **Header**: Logo RSM en esquina superior derecha (paginas de contenido)
-- **Footer**: Titulo del documento | RSM Peru S.A.C. | Pagina N / Total (paginas de contenido)
+- **Portada** (seccion 1):
+  - Fondo azul oscuro (#00153D) via VML rect en footer1.xml
+  - Onda PoP azul via VML shape en footer1.xml (esquina inferior derecha)
+  - Logo RSM via DrawingML en header1.xml (esquina superior derecha, posOffset absoluto)
+  - Tabla flotante: DRAFT (blanco) + endorsement (cyan) + titulo (blanco 32pt) + subtitulo (blanco 18pt) + fecha (cyan 12pt)
+  - Estilos inyectados: ReportTitle, ReportSubtitle, CoverStatus, Endorsementsblue, Dateblue
+- **Header contenido** (seccion 2): Logo RSM mismo tamano y posicion que portada (header2.xml)
+- **Footer contenido** (seccion 2): Titulo | RSM Peru S.A.C. | Pagina N / Total con linea azul (footer2.xml)
 - **Heading 1**: Arial 26pt, azul RSM (#009CDE), salto de pagina antes
 - **Heading 2**: Arial Bold, azul RSM
 - **Body Text**: Arial 9pt, gris (#63666A)
